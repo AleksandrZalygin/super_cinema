@@ -58,8 +58,8 @@ while True:
     else:
         print('Регистрация.')
         password = input('Введите пароль: ')
-        user = User(user_name)
-        if user.registration_new_user(password): 
+        user = User(user_name, films)
+        if user.registration_new_user(user, password): 
             print('Регистрация прошла успешно!')
             break
 
@@ -101,12 +101,14 @@ if choice == '1':
 'Какой фильм хотите добавить в "Просмотренные"?\nОт 1 до 5: '))
             user_grade = input('Ваша оценка фильму: ')
             if user.add_film_to_viewed(5 * film_pagination.current_page - (6 - number_of_film_to_viewed),
+                                        films,
                                         user_grade):
                 print('Успешно добавлено!')
         elif choice_of_next_page == '4':
             number_of_film_to_watch_later = int(input(
 'Какой фильм хотите добавить в "Cмотреть позже"?\nОт 1 до 5: '))
-            if user.add_film_to_watch_later(5 * film_pagination.current_page - (6 - number_of_film_to_watch_later)):
+            if user.add_film_to_watch_later(5 * film_pagination.current_page - (6 - number_of_film_to_watch_later),
+                                            films):
                 print('Успешно добавлено!')
         else:
             break 
@@ -222,20 +224,20 @@ elif choice == '4':
             viewed_films = user.get_user_films_from_json_viewed(True)
 
             for index, film in enumerate(viewed_films.keys(), 1):
-                print(f'{index}. {film}. Ваша оценка: {viewed_films[film]}')
+                print(f'{index}) {film}. Ваша оценка: {viewed_films[film]}')
             break
         elif choice_of_sort_films == '2':
             viewed_films = user.get_user_films_from_json_viewed()
 
             for index, film in enumerate(viewed_films.keys(), 1):
-                print(f'{index}. {film}. Ваша оценка: {viewed_films[film]}')
+                print(f'{index}) {film}. Ваша оценка: {viewed_films[film]}')
             break
         elif choice_of_sort_films == '3':
             search_film_genre = input('\nВведите жанр: ')
             viewed_films = user.get_user_films_from_json_viewed_with_genre(search_film_genre)
 
             for index, film in enumerate(viewed_films, 1):
-                print(f'{index}. {film}. Ваша оценка: {viewed_films[film]}')
+                print(f'{index}) {film}. Ваша оценка: {viewed_films[film]}')
             break
         else:
             print('Ошибка! Введите число от 1 до 3!')
@@ -244,6 +246,6 @@ elif choice == '5':
     watch_later_films = user.get_user_films_from_json_watch_later()
 
     for index, film in enumerate(watch_later_films, 1):
-        print(f'{index}. {film}')
+        print(f'{index}) {film}')
 else:
     print('Ошибка! Введите число от 1 до 5!')

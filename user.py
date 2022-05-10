@@ -1,31 +1,31 @@
 import json
 import os
+from itertools import product
 
 from exceptions import FileAlreadyExist, NotCorrectNickName, NotCorrectPassword
 
 class User:
-    def __init__(self, user_name: str, films: list):
-        self.user_name = user_name
-        self.films = films
-
+    @staticmethod
     def registration_new_user(self, password: str):
         if f"{self.user_name.replace('@', '')}.json" in os.listdir('data'):
             raise FileAlreadyExist('Такой пользователь уже существует!')
-            return False
 
         for letter in self.user_name:
             if not self.user_name.startswith('@') or letter in r'[0-9]':
                 raise NotCorrectNickName('Некорректное имя пользователя!')
-                return False
 
         if len(password) < 8:
             raise NotCorrectPassword('Пароль не может быть меньше восьми символов!')
-            return False
 
-        self.__create_json_file(password)
+        self._create_json_file(password)
         return True
 
-    def __create_json_file(self, password: str):
+
+    def __init__(self, user_name: str, films: list):
+        self.user_name = user_name
+        self.films = films
+
+    def _create_json_file(self, password: str):
         user_data = {
             "nickname": self.user_name,
             "password": password,
@@ -78,30 +78,35 @@ class User:
             data = json.load(json_file)
 
         films_to_return = {}
-        for film_title in data['Просмотренные']:
+        map(lambda film: films_to_return.update({film: float(data['Просмотренные'][film.title]['user_grade'])}),
+            [film for film_title, film in product(data['Просмотренные'].keys(), self.films) if film.title == film_title])
+
+
+        ''' for film_title in data['Просмотренные']:
             for film in self.films:
                 if film_title == film.title:
-                    films_to_return[film] = float(data['Просмотренные'][film_title]['user_grade'])
+                    films_to_return[film] = float(data['Просмотренные'][film_title]['user_grade']) '''
 
-        sorted_values = sorted(films_to_return.values(), reverse=reverse)
-        sorted_dict = {}
+        sorted_films_by_rating = sorted(films_to_return.values(), reverse=reverse)
+        sorted_films = {}
 
-        for i in sorted_values:
-            for k in films_to_return.keys():
-                if films_to_return[k] == i:
-                    sorted_dict[k] = films_to_return[k]
+        for grade in sorted_films_by_rating:
+            for film_name in films_to_return.keys():
+                if films_to_return[film_name] == grade:
+                    sorted_films[film_name] = films_to_return[film_name]
                     break
-        return sorted_dict
+        return sorted_films
 
     def get_user_films_from_json_viewed_with_genre(self, user_genre):
         with open(f'data/{self.user_name.replace("@", "")}.json', 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
 
         films_to_return = []
-        for film_title in data['Просмотренные']:
-            for film in self.films:
-                if film_title == film.title:
-                    films_to_return.append(film)
+        for film_title, film in product(data['Просмотренные'], self.films):
+            if film_title == film.title:
+                films_to_return.append(film)
+
+        # films_to_return = [film for film_title, film in product(data['Просмотренные'], self.films) if film_title == film.title]
         
         suitable_films = {}
         for film in films_to_return:
@@ -114,9 +119,8 @@ class User:
             data = json.load(json_file)
 
         films_to_return = []
-        for film_title in data['Смотреть позже']:
-            for film in self.films:
-                if film_title == film.title:
-                    films_to_return.append(film)
+        for film_title, film in product(data['Смотреть позже'], self.films):
+            if film_title == film.title:
+                films_to_return.append(film)
 
         return films_to_return

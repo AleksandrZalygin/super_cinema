@@ -3,14 +3,12 @@
     "password": "12345678",
     "Просмотренные": {
         "film_name": {
-            "film_obj": "film_obj",
             "genres": "genres",
             "grade": 9.5
         }
     },
     "Смотреть позже": {
         "film_name": {
-            "film_obj": "film_obj",
             "genres": "genres",
             "grade": 9.5
         }
