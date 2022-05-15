@@ -6,7 +6,6 @@ class OnlainCinema:
             if user_title in film.title:
                 suitable_films.append(film)
         return suitable_films
-                # yield f'{film.title} ({film.year}), {film.rating}\n'
 
     def search_films_by_genre(films: list, user_genre: str):
         suitable_films = []
