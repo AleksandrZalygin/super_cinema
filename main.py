@@ -3,6 +3,7 @@ import requests
 
 from film import Film
 from film_pagination import FilmPagination
+from onlain_cinema import OnlainCinema
 from user import User
 
 
@@ -114,7 +115,7 @@ if choice == '1':
             break 
 elif choice == '2':
     search_film_title = input('Введите название фильма: ')
-    suitable_films = Film.search_films_by_title(films, search_film_title)
+    suitable_films = OnlainCinema.search_films_by_title(films, search_film_title)
 
     if len(suitable_films) >= 5:
         film_pagination = FilmPagination(suitable_films, 5)
@@ -167,7 +168,7 @@ elif choice == '3':
         print(f'{index}. {genre}')
 
     search_film_genre = input('\nВведите жанр: ')
-    suitable_films = Film.search_films_by_genre(films, search_film_genre)
+    suitable_films = OnlainCinema.search_films_by_genre(films, search_film_genre)
     if len(suitable_films) >= 5:
         film_pagination = FilmPagination(suitable_films, 5)
     else:
